@@ -1,0 +1,8 @@
+{
+    "username": "",
+    "password": "",
+    "retry_count": 3,
+    "retry_delay": 3,
+    "login_timeout": 10,
+    "connectivity_check_urls": ["https://www.baidu.com", "https://www.qq.com"]
+}
