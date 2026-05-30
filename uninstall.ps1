@@ -1,37 +1,19 @@
 ﻿#Requires -RunAsAdministrator
 <#
 .SYNOPSIS
-    Uninstall CampusNetHelper startup + keepalive tasks
+    Uninstall CampusNetHelper startup + keepalive
 .NOTES
-    Must run as Administrator!
+    Run as Administrator!
 #>
-
-$PSDefaultParameterValues['*:Encoding'] = 'utf8'
 chcp 65001 > $null
+$StartupDir = [Environment]::GetFolderPath("Startup")
 
-$StartupTask   = "CampusNetHelper"
-$KeepaliveTask = "CampusNetHelperKeepalive"
+# 删开机启动 bat
+$BatPath = "$StartupDir\CampusNetHelper.bat"
+if (Test-Path $BatPath) { Remove-Item $BatPath -Force; Write-Host "[OK] 已删除开机启动" }
 
-Write-Host "===============================================" -ForegroundColor Cyan
-Write-Host "   Uninstall CampusNetHelper - Tasks" -ForegroundColor Cyan
-Write-Host "===============================================" -ForegroundColor Cyan
-
-Write-Host ">>> Removing startup task..." -ForegroundColor Cyan
-schtasks /delete /tn $StartupTask /f
-if ($LASTEXITCODE -eq 0) {
-    Write-Host "  [OK] Deleted" -ForegroundColor Green
-} else {
-    Write-Host "  [WARN] Task not found or delete failed" -ForegroundColor Yellow
-}
-
-Write-Host ">>> Removing keepalive task..." -ForegroundColor Cyan
-schtasks /delete /tn $KeepaliveTask /f
-if ($LASTEXITCODE -eq 0) {
-    Write-Host "  [OK] Deleted" -ForegroundColor Green
-} else {
-    Write-Host "  [WARN] Task not found or delete failed" -ForegroundColor Yellow
-}
-
-Write-Host ""
-Write-Host "Uninstall complete." -ForegroundColor Green
+# 删计划任务
+schtasks /delete /tn "CampusNetHelperKeepalive" /f 2> $null
+Write-Host "[OK] 已删除保活任务"
+Write-Host "Uninstall complete."
 pause
